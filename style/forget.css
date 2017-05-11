@@ -1,0 +1,53 @@
+/*公告头部start*/
+.header{
+    background-color: #0596e7;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    text-align: center;
+}
+.back{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.64rem;
+    height: 0.9rem;
+    display: inline-block;
+    vertical-align: middle;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAiCAYAAABStIn6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAKBJREFUeNqs1j0OgCAMhmE03MLV1fsvDl7Ejc3EK2DRkBiD/PVt8q1PBKRl8N4bRc2SVXJaJbJJJok14Ys6Mkucf+qQLAhybw+BtEK/SAuURWqhIlIDVSElqBrJQU3IH9SMpKAu5At1I29IhURIjURo1yIho6GKXBq22ejxoz8kekXQS4u2EbSxoa0Wbf7oOEIHJDqy0UdECnMD9dC6BBgA1De16yiHHFQAAAAASUVORK5CYII=) no-repeat center center / 0.18rem 0.34rem;
+}
+.header_title{
+    color: #ffffff;
+    font-size: 0.34rem;
+}
+/*公告头部end*/
+
+.forget{
+   padding: 0 0.5rem;
+}
+.forgetmargin{
+    margin-top: 10px;
+}
+.forget .info{
+    padding: 0.7rem 0;
+    text-align: center;
+    font-size: 0.3rem;
+    line-height: 0.4rem;
+}
+.orange_btn{
+    display: block;
+    background-color: #fc9b16;
+    font-size: 0.34rem;
+    height: 0.96rem;
+    line-height: 0.96rem;
+    color: #ffffff;
+    -webkit-border-radius: 0.1rem;
+    border-radius: 0.1rem;
+    border: 1px solid #e2e2e2;
+    text-align: center;
+}
+.password_tip{
+    color: #666666;
+    font-size: 0.28rem;
+    line-height: 0.4rem;
+    margin: 0.2rem 0 0.8rem 0;
+}

@@ -1,0 +1,22 @@
+/*初始化*/
+*{margin:0; padding:0;}
+body{-webkit-tap-highlight-color:rgba(0,0,0,0); max-width:750px; margin:0 auto;height: 100%;}
+html{zoom:1; height: 100%;}
+html *{outline:0;zoom:1;} 
+body,html { width:100%; min-height: 100%; -webkit-user-select:none; user-select:none; background-color: #eeeeee;font-size: 0.24rem;color: #333333;}
+html button::-moz-focus-inner{border-color:transparent!important;} 
+img {max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic;-webkit-touch-callout:none}
+a{text-decoration:none; color:#333;outline:none; -webkit-touch-callout: none;}
+a:active{color:#FF5A60;}
+li{list-style-type:none;}
+address,caption,cite,code,dfn,em,th,var,i{font-style:normal;font-weight:normal;}
+h1,h2,h3,h4,h5,h6 {font-size:100%; font-weight:normal;}
+input,button,select,textarea{outline:none;}
+input[type="submit"], input[type="reset"], input[type="button"],input[type="text"],input[type="password"],textarea, button{appearance: none;-moz-appearance: none;-webkit-appearance: none;border: none;}
+form{display: initial;}
+.clearfix::after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;overflow:hidden}
+.none{display:none}
+#root{
+    min-height: 100%;
+}
+.hide{display: none}

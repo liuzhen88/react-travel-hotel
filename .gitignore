@@ -1,0 +1,27 @@
+/node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+.idea/
+.DS_Store
+# Runtime data
+pids
+*.pid
+*.seed
+
+lib-cov
+
+coverage
+
+.grunt
+
+.lock-wscript
+
+build/Release
+
+node_modules
+
+.npm
+
+.node_repl_history
