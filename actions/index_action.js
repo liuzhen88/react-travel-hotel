@@ -25,7 +25,7 @@ const previewTimeAction = (startTime, endTime, data) => {
 }
 
 const updateEndPlace = (data) => {
-	console.log(data);
+	//console.log(data);
 	return {
 		type:'UPDATE_END_PLACE',
 		data

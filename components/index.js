@@ -3,6 +3,7 @@ import actions from '../actions/action';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import deepcopy from 'deepcopy';
+import {createHashHistory} from 'history';
 import { Link } from 'react-router';
 import styles from '../style/index.css';
 import banner1 from '../images/index_banner.png';
@@ -11,6 +12,7 @@ import Title from './title';
 import app from '../config/public';
 import config from '../config/apiconfig';
 
+const history = createHashHistory();
 let IndexPage = React.createClass({
 	getInitialState: function() {
 		let ticket = deepcopy(this.props.data.ticket);
@@ -39,17 +41,17 @@ let IndexPage = React.createClass({
 	showSelectCalendar(){
 		let customTime = this.props.data.customTime;
 		this.setState({
-			modal:'mask',
-			calendar:"calendar_panel"
+			modal:'mask'
 		});
+		$("#calender").slideToggle(200);
 		this.props.dispatch(actions.indexAction.selectDateAction(customTime[0],customTime[1],this.props.data));
 		this.refs.callChildren.updateChildren(customTime[0],customTime[1]);
 	},
 	handleConfirmTime(start, end){
 		this.setState({
-			modal:'mask none',
-			calendar:"calendar_panel none"
+			modal:'mask none'
 		});
+		$("#calender").slideToggle(200);
 		this.props.dispatch(actions.indexAction.selectDateAction(start,end,this.props.data));
 		let localStore = app.getLocalStore();
 		let storeData = this.props.data;
@@ -64,9 +66,14 @@ let IndexPage = React.createClass({
 	hideModal(){
 		this.setState({
 			modal:'mask none',
-			calendar:"calendar_panel none",
 			selectPeopleContainer:'passenger none',
 		});
+		if(!$("#calender").is(":hidden")){
+			$("#calender").slideToggle(200);
+		}
+		if(!$("#select-people").is(':hidden')){
+			$("#select-people").slideToggle(200);
+		}
 	},
 	getEndPlace(place){
 		let placeName = '';
@@ -206,9 +213,9 @@ let IndexPage = React.createClass({
 		//选择出行人数
 		this.setState({
 			modal:'mask',
-			selectPeopleContainer:'passenger',
 			ticket:ticket
-		})
+		});
+		$("#select-people").slideToggle(200);
 	},
 	addAdultNum(){
 		//成人++
@@ -251,9 +258,9 @@ let IndexPage = React.createClass({
 		let ticket = this.state.ticket;
 		this.props.dispatch(actions.indexAction.updateSelectPeople(ticket));
 		this.setState({
-			modal:'mask none',
-			selectPeopleContainer:'passenger none',
+			modal:'mask none'
 		});
+		$("#select-people").slideToggle(200);
 		//更新缓存
 		let localStore = app.getLocalStore();
 		localStore.customPackage.ticket = ticket;
@@ -266,7 +273,38 @@ let IndexPage = React.createClass({
 		this.props.dispatch(actions.indexAction.updateEndPlace(custom));
 		let localStore = app.getLocalStore();
 		localStore.customPackage.endPlace = [];
+		localStore.customEndPlace.selectHistory = [];
 		app.setLocalStore(localStore);
+	},
+	authNext(){
+		let data = this.props.data;
+		let startId = data.startPlace.Id[0];
+		if(!startId){
+			app.showMsg('出发地不能为空');
+			return;
+		}
+
+		let endPlace = data.endPlace;
+
+		if(endPlace.length == 0){
+			app.showMsg('目的地不能为空');
+			return;
+		}
+
+
+		let isHasSameId = false;
+		endPlace.map(function(item){
+			if(item.Id == startId){
+				isHasSameId = true;
+			}
+		});
+		if(isHasSameId == true){
+			app.showMsg('出发地和目的地不能相同');
+			return;
+		}
+		history.push('/');
+		history.replace('/travelNeedDetail');
+
 	},
 	render(){
 		let that = this;
@@ -330,11 +368,9 @@ let IndexPage = React.createClass({
 							<i className="icon arrow"></i>
 						</div>
 						<div className="search_item">
-							<Link to={
-								this.state.token == '' ? '/login' : '/travelNeedDetail'
-							}>
-								<div className="blue_btn">下一步</div>
-							</Link>
+							
+							<div className="blue_btn" onClick={this.authNext}>下一步</div>
+							
 						</div>
 					</div>
 					<ul className="myself">
@@ -347,7 +383,7 @@ let IndexPage = React.createClass({
 						<li>
 							<Link to={
 								this.state.token == '' ? '/login':'/personCenter'
-							}>个人中心</Link>
+							}>{this.state.token == '' ? '登陆注册':'个人中心'}</Link>
 							<p>会员、福利</p>
 						</li>
 					</ul>
@@ -361,7 +397,7 @@ let IndexPage = React.createClass({
 				<footer>www.ceekee.com. 思客智旅提供服务</footer>
 				<div className="buubbles">
 					<div className={this.state.modal} onClick={this.hideModal}></div>
-					<div className={this.state.selectPeopleContainer}>
+					<div className={this.state.selectPeopleContainer} id='select-people'>
 						<div className="tit">出行人数</div>
 						<div className="passenger_item clearfix">
 							<label>成人</label>
@@ -383,7 +419,7 @@ let IndexPage = React.createClass({
 							<div className="orange_btn" onClick={this.confirmPeople}>确认</div>
 						</div>
 					</div>
-					<div className={this.state.calendar}>
+					<div className={this.state.calendar} id='calender'>
 						<div className="calendar_top">
 							<div className="time_info">
 								<p className="time_state">出发</p>
@@ -404,8 +440,8 @@ let IndexPage = React.createClass({
 							beforeLimitHourSkip='1'
 							afterLimitHourSkip='2'
 							totalMonth='3'
-							startText='入'
-							endText='离'
+							startText='出'
+							endText='返'
 							startTime={data.customTime[0] ? data.customTime[0] : ''}
 							endTime={data.customTime[1] ? data.customTime[1] : ''}
 							previewCallback={(start,end) => {

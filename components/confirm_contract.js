@@ -101,6 +101,9 @@ let ConfirmContract = React.createClass({
 			});
 		}
 	},
+	componentWillMount : function(){
+		app.checkLogin();
+	},
 	componentDidMount() {
 		let that = this;
 		let query = this.props.location.query;

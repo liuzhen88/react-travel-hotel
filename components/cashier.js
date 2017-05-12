@@ -31,6 +31,7 @@ let Cashier = React.createClass({
 		}	
 	},
 	componentWillMount : function(){
+		app.checkLogin();
 		var serialNo =this.props.location.query.did;
 		if(!!serialNo)
 		{
@@ -49,7 +50,6 @@ let Cashier = React.createClass({
 	payInfoCallback:function(data){
 		if(app.GetResultState(data))
 		{
-			console.log(JSON.stringify(data));
 			var leftTime=0,paytype=0;
 			var hitStr="",titleStr="",dateStr="",personStr="",moneyStr="";
 			try {
@@ -84,15 +84,18 @@ let Cashier = React.createClass({
 		var hour = Math.floor((leftsecond - day1 * 24 * 60 * 60) / 3600);
 		var minute = Math.floor((leftsecond - day1 * 24 * 60 * 60 - hour * 3600) / 60);
 		var second = Math.floor(leftsecond - day1 * 24 * 60 * 60 - hour * 3600 - minute * 60);
-
-		if(hour > 0) {
-			return hour + '小时' + minute + '分' + second + '秒';
-		} else if(minute > 0) {
-			return minute + '分' + second + '秒';
-		} else if(second > 0) {
-			return second + '秒';
-		} else {
-			return false;
+		if(day1==0){
+			if(hour > 0) {
+				return hour + '小时' + minute + '分' + second + '秒';
+			} else if(minute > 0) {
+				return minute + '分' + second + '秒';
+			} else if(second > 0) {
+				return second + '秒';
+			} else {
+				return false;
+			}
+		}else {
+			return day1 + "天" +  hour + '小时' + minute + '分';
 		}
 	},
 	    runCountdown:function() {
@@ -110,14 +113,14 @@ let Cashier = React.createClass({
     },
     toPay:function(){
     	var data={"ProductType" : this.state.productType,"SerialNo": this.state.serialNo,
-    	"Type" : this.state.payType,"ReturnUrl" : "https://cgfyg.ceekee.com/#/paySuccess","OrderStatus":this.state.orderStatus};
+    	"Type" : this.state.payType,"ReturnUrl" : "http://cgfyg.ceekee.com/#/paySuccess","OrderStatus":this.state.orderStatus};
     	app.Post(apiconfig.GetOrderPayForm,data,this.toPayCallback);
     },
     toPayCallback:function(data)
     {
     	if(app.GetResultState(data))
 		{
-    		this.setState({payForm:data.PayPram});
+    		this.setState({payForm:data.PayPram},function(){document.forms['alipaysubmit'].submit();});
     	}
     	else
     	{
@@ -195,7 +198,7 @@ let Cashier = React.createClass({
 						<a>确认支付</a>
 					</div>
 				</div>
-				<form className="none;">{this.state.payForm}</form>
+				<div className="none" dangerouslySetInnerHTML={{__html: this.state.payForm}}></div>
 			</div>
 		)
 	}

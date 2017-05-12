@@ -17,7 +17,6 @@ let Head = React.createClass({
 	render(){
 		return (
 			<div className={ this.props.className ? this.props.className : "header"}>
-				<div onClick={this.handleBack} className="back"></div>
 				<h3 className="header_title">{ this.props.titleName ? this.props.titleName : '' }</h3>
 			</div>
 		)
@@ -32,6 +31,9 @@ let ChangePasswordPage = React.createClass({
 			password:"",
 			apassword:""
 		};
+	},
+	componentWillMount : function(){
+		app.checkLogin();
 	},
 	oldpasswordChange:function(event)
 	{

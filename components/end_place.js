@@ -254,7 +254,7 @@ let LocationPage = React.createClass({
 			<div>
 				<div className="head_top dosearch">
 					<div className="back none"></div>
-					<input type="text" 
+					<input type="search" 
 						className="input" 
 						placeholder="请输入出发地(如苏州/suzhou/sz)"
 						defaultValue={this.state.defaultValue}

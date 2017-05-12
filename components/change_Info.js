@@ -16,7 +16,6 @@ let Head = React.createClass({
 	render(){
 		return (
 			<div className={ this.props.className ? this.props.className : "header"}>
-				<div onClick={this.handleBack} className="back"></div>
 				<h3 className="header_title">{ this.props.titleName ? this.props.titleName : '' }</h3>
 			</div>
 		)
@@ -29,6 +28,25 @@ let ChangeInfoPage = React.createClass({
 			titleName: "修改姓名",
 			name:""
 		};
+	},
+	componentWillMount : function(){
+		var memberId=app.getSettings().memberId;
+		if(!!memberId)
+		{
+			window.location.hash = '#login';
+		}else {
+			app.Post(apiconfig.GetCustomerInfo,{"a":1},this.dataCallback);
+		}
+	},
+	dataCallback:function(data){
+		if(app.GetResultState(data))
+		{
+			this.setState({name:data.Name});
+		}
+		else {
+			alert(data.Msg);
+			window.location.hash = '#login';
+		}
 	},
 	nameChange:function(event)
 	{

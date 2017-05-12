@@ -8,6 +8,7 @@ import banner from '../images/banner.png';
 import app  from '../config/public';
 import validate from '../config/validate';
 import apiconfig from '../config/apiconfig';
+import Alert from './alert'
 
 let LoginPage = React.createClass({
 	getInitialState: function() {
@@ -22,7 +23,8 @@ let LoginPage = React.createClass({
 			password:"",
 			codeCss:"sendcode",
 			codeIntro:"获取验证码",
-			codeCount:60
+			codeCount:60,
+			alertCss :"none"
 		};
 	},
 	componentWillMount : function(){
@@ -75,7 +77,6 @@ let LoginPage = React.createClass({
 	{
 		if(app.GetResultState(data))
 		{
-             
 			this.timer = setInterval(function () {
             var count = this.state.codeCount;
             count -= 1;
@@ -177,11 +178,11 @@ let LoginPage = React.createClass({
 			content =
 				<div className="tabcont">
 					<div className="group_item">
-						<input type="text" className="input" placeholder="请输入手机号码" ref="mobile" onChange={this.handleChange} value={value} maxLength="11"/>
+						<input type="tel" className="input" placeholder="请输入手机号码" ref="mobile" onChange={this.handleChange} value={value} maxLength="11"/>
 						<a className={this.state.codeCss} onClick={this.sendCode}>{this.state.codeIntro}</a>
 					</div>
 					<div className="group_item">
-						<input type="text" className="input" onChange={this.codeChange} placeholder="请输入验证码" ref="msgcode" />
+						<input type="tel" className="input" onChange={this.codeChange} placeholder="请输入验证码" ref="msgcode" />
 					</div>
 					<div className="group_item">
 						<a className="orange_btn" onClick={this.login}>登录</a>
@@ -191,7 +192,7 @@ let LoginPage = React.createClass({
 			content =
 			<div className="tabcont">
 				<div className="group_item">
-					<input type="text" className="input" placeholder="请输入手机号码" onChange={this.handleChange} ref="mobile" value={value} maxLength="11"/>
+					<input type="tel" className="input" placeholder="请输入手机号码" onChange={this.handleChange} ref="mobile" value={value} maxLength="11"/>
 				</div>
 				<div className="group_item">
 					<input type="password" className="input" placeholder="请输入密码" onChange={this.passwordChange} ref="pwd" maxLength="16"/>
@@ -213,7 +214,8 @@ let LoginPage = React.createClass({
 					<li className={this.state.loginType==2?"at":""} onClick={this.typeChange2}>思客帐号登录</li>
 				</ul>
 				{content}
-			</div>
+
+							</div>
 		)
 	}
 });

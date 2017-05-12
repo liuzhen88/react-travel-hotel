@@ -8,6 +8,8 @@ import banner from '../images/banner.png';
 import app  from '../config/public';
 import validate from '../config/validate';
 import apiconfig from '../config/apiconfig';
+import closeIcon from '../images/close.svg';
+import Alert from './alert';
 
 let Head = React.createClass({
 	handleBack(){
@@ -16,13 +18,12 @@ let Head = React.createClass({
 	render(){
 		return (
 			<div className={ this.props.className ? this.props.className : "header"}>
-				<div onClick={this.handleBack} className="back"></div>
 				<h3 className="header_title">{ this.props.titleName ? this.props.titleName : '' }</h3>
 			</div>
 		)
 	}
 });
-let Alert = React.createClass({
+let AlertConfim = React.createClass({
 	handleLogin:function()
 	{
 		window.location.hash = '#login?mobile=' + this.props.mobileNumber;
@@ -56,20 +57,37 @@ let RegisterPage = React.createClass({
 			code:"",
 			password:"",
 			apassword:"",
-			alertCss:"none"
+			alertCss:"none",
+			isAgree:true,
+			modal:'modal none',
+			TermsContent:'',
+			alertoneCss:"none"
 		};
 	},
+	componentWillMount() {
+		let that = this;
+		app.Post(apiconfig.GetSericeTerms,{data:{}},function(data){
+			if(data.Code == '0000'){
+				that.setState({
+					TermsContent:data.TermsContent
+				});
+			}
+		});
+	},
 	handleClick01: function(event) {
-		var mobile=this.state.mobileNumber;
-		if(!validate.checkMobile(mobile))
-		{
- 			app.showMsg("请输入正确的手机号");
-			this.setState({moblieFocus:true});
- 			return;
-		}
+		if(this.state.isAgree == true){
 
-		var data={"phone":mobile};
-		app.Post(apiconfig.CheckPhoneIsRegister,data,this.checkPhoneCallback);
+			var mobile=this.state.mobileNumber;
+			if(!validate.checkMobile(mobile))
+			{
+	 			app.showMsg("请输入正确的手机号");
+				this.setState({moblieFocus:true});
+	 			return;
+			}
+
+			var data={"phone":mobile};
+			app.Post(apiconfig.CheckPhoneIsRegister,data,this.checkPhoneCallback);
+		}
 	},
 
 	checkPhoneCallback:function(data)
@@ -169,13 +187,15 @@ let RegisterPage = React.createClass({
 			app.setSettings(settings);
 			if(!!this.timer)
 				clearInterval(this.timer);
-			alert("注册成功");
-
-			app.ToMain();
+			this.setState({alertoneCss:""});
 		}else
 		 {
 			app.showMsg(data.Msg);
 		}
+	},
+	handle:function(){
+		this.setState({alertoneCss:"none"},function(){app.ToMain();});
+		
 	},
 	mobileChange:function(event)
 	{
@@ -195,6 +215,22 @@ let RegisterPage = React.createClass({
 	apasswordChange:function(event){
 		this.setState({apassword:event.target.value});
 	},
+	handleAgree(){
+		let isAgree = this.state.isAgree == true ? false:true;
+		this.setState({
+			isAgree:isAgree
+		});
+	},
+	showContract(){
+		this.setState({
+			modal:'modal'
+		});
+	},
+	closeModal(){
+		this.setState({
+			modal:'modal none'
+		});
+	},
 	render(){
 		var register;
 		if(this.state.step==1){
@@ -204,11 +240,15 @@ let RegisterPage = React.createClass({
 					思客智旅欢迎您
 				</div>
 				<div className="group_item">
-					<input type="text" placeholder="请输入11位手机号码" onChange={this.mobileChange} value={this.state.mobileNumber} className="input" ref="mobile" maxLength="11"/>
-					<p className="aggree selected"><i></i>同意<a className="	contract">《思客智旅服务使用协议》</a></p>
+					<input type="tel" placeholder="请输入11位手机号码" onChange={this.mobileChange} value={this.state.mobileNumber} className="input" ref="mobile" maxLength="11"/>
+					<p className={
+						this.state.isAgree == true ? "aggree selected" : "aggree"
+					}><i onClick={this.handleAgree}></i>同意<a className="contract" onClick={this.showContract}>《思客智旅服务使用协议》</a></p>
 				</div>
 				<div className="group_item">
-					<a className="orange_btn" onClick={this.handleClick01}>下一步，验证手机号</a>
+					<a className={
+						this.state.isAgree == true ? 'orange_btn':'orange_btn limit-register'
+					} onClick={this.handleClick01}>下一步，验证手机号</a>
 				</div>
 			</div>;
 		}else if(this.state.step==2){
@@ -218,7 +258,7 @@ let RegisterPage = React.createClass({
 						验证手机  {this.state.mobileNumber}
 					</div>
 					<div className="group_item">
-						<input type="text" className="input" placeholder="请输入验证码" onChange={this.codeChange} value={this.state.code} ref="mobile" maxLength="4"/>
+						<input type="tel" className="input" placeholder="请输入验证码" onChange={this.codeChange} value={this.state.code} ref="mobile" maxLength="4"/>
 						<a className={this.state.codeCss} onClick={this.sendCode}>{this.state.codeIntro}</a>
 					</div>
 					<div className="group_item">
@@ -257,6 +297,18 @@ let RegisterPage = React.createClass({
 				<Head titleName={this.state.titleName}/>
 				{register}
 				<Alert mobileNumber={this.state.mobileNumber} css={this.state.alertCss}  showAlert={this.showAlert}/>
+				<Alert css={this.state.alertoneCss} msg="注册成功" handle={this.handle} />
+				<div className={this.state.modal}>
+					<div className='cost-box'>
+						<h3>服务条款</h3>
+						<div className='cost-body' dangerouslySetInnerHTML={{__html: this.state.TermsContent}}>
+
+						</div>
+						<div className="cost-footer-btn" onClick={this.closeModal}>
+							<img src={closeIcon}/>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}

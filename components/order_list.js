@@ -47,17 +47,18 @@ let OrdersList = React.createClass({
 			dataTitle:[],
 			dataOrder:[],
 			errorMsg:"",
-			errorCss:"box_list none",
+			errorCss:"box_listerror none",
 			pullUp: true,
       		pullDown: true,
       		hasMore:true
 		}
 	},
 	componentWillMount : function(){
+		app.checkLogin();
 		var type=0;
 		if(!!this.props.location.query.type)
-		var type= this.props.location.query.type;
-		this.setState({type:type},this.GetOrderList());
+			type= this.props.location.query.type;
+		this.setState({type:type},this.GetOrderList);
 	},
 	GetOrderList:function()
 	{
@@ -83,7 +84,7 @@ let OrdersList = React.createClass({
 			}
 			if(orderList1.length<=0)
 			{
-				this.setState({dataTitle:titleList, dataOrder: orderList1,errorMsg:"暂无订单数据",errorCss:"box_list",hasMore:moreCount});
+				this.setState({dataTitle:titleList, dataOrder: orderList1,errorMsg:"暂无订单数据",errorCss:"box_listerror",hasMore:moreCount});
 			}else
 			 {
 			 	var datalist=this.state.dataOrder;
@@ -91,7 +92,7 @@ let OrdersList = React.createClass({
 			 	{
 			 		datalist.push(orderList1[i]);
 			 	}
-				this.setState({dataTitle:titleList, dataOrder: datalist,errorMsg:"",errorCss:"box_list none",hasMore:moreCount});
+				this.setState({dataTitle:titleList, dataOrder: datalist,errorMsg:"",errorCss:"box_listerror none",hasMore:moreCount});
 			}
 		}
 		else{
@@ -99,9 +100,9 @@ let OrdersList = React.createClass({
 			{
 				var orderList1=data.OrderList==null ?[] : data.OrderList;
 				var titleList=data.TitleList == null ? [] : data.TitleList;
-				this.setState({dataTitle:titleList, dataOrder: orderList1,errorMsg:data.Msg,errorCss:"box_list",hasMore:moreCount});
+				this.setState({dataTitle:titleList, dataOrder: orderList1,errorMsg:data.Msg,errorCss:"box_listerror",hasMore:moreCount});
 			}else {
-				this.setState({dataTitle:[], dataOrder: [],errorMsg:data.Msg,errorCss:"box_list",hasMore:moreCount});
+				this.setState({dataTitle:[], dataOrder: [],errorMsg:data.Msg,errorCss:"box_listerror",hasMore:moreCount});
 			}
 		}
 	},
@@ -143,7 +144,7 @@ let OrdersList = React.createClass({
 	},
 	toOrderDetail:function(data)
 	{
-		window.location.hash = '#orderdetail?did=' + data.SerialNo;
+		window.location.hash = '#orderDetail?did=' + data.SerialNo;
 	},
 	render(){
 		var thisdom=this;

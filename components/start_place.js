@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {createHashHistory} from 'history';
 import app from '../config/public';
+import config from '../config/apiconfig';
 
 const history = createHashHistory();
 let isSendRequest = true;
@@ -19,13 +20,78 @@ let StartPlace = React.createClass({
 			searchContent:'box_list none',
 			initContainer:'box_list',
 			searchHistory:'search-history none',
-			searchResult:'search-result-container none'
+			searchResult:'search-result-container none',
+			position:{
+				CityId:'',
+				Name:'',
+				Id:''
+			}
 		}	
 	},
 	componentDidMount() {
+		let that = this;
 		this.props.dispatch(actions.startPlaceAction.hotCityAsync());
+		this.handlePosition(function(result){
+			that.setState({
+				position:{
+					CityId:result.CityId,
+					Name:result.Name,
+					Id:result.Id
+				}
+			});
+		});
+	},
+	handlePosition(callback){
+		let that = this;
+		var myCity = new BMap.LocalCity();
+		myCity.get(function(result){
+			var name = result.name;
+			app.Post(config.GetDestinationList,{
+				DestReqType:'current',
+				DestList:[
+					{
+						Type:1,
+						Id:0,
+						Name:name
+					}
+				]
+			},function(data){
+				if(data.Code == '0000'){
+					let result = data.DestList[0];
+					callback(result);
+				}else{
+					that.setState({
+						position:{
+							CityId:'',
+							Name:'定位失败',
+							Id:''
+						}
+					});
+				}
+			});
+		});
+	},
+	handlePositionCity(){
+		let that = this;
+		let position = this.state.position;
+		if(position.CityId == ''){
+			//定位失败，再次定位
+			this.handlePosition(function(result){
+				that.setState({
+					position:{
+						CityId:result.CityId,
+						Name:result.Name,
+						Id:result.Id
+					}
+				});
+			});
+		}else{
+			//定位成功直接跳
+			this.handleHotCity(position);
+		}
 	},
 	handleHotCity(data){
+		let searchHitory = this.props.searchHitory;
 		let localStore = app.getLocalStore();
 		let selectCityAssemble = this.props.historyCity;
 		this.props.dispatch(actions.startPlaceAction.updateStartPlace(data,this.props.custom));
@@ -40,6 +106,19 @@ let StartPlace = React.createClass({
 			this.props.dispatch(actions.startPlaceAction.updateHotCity(newArr));
 
 			localStore.startPlaceSelectHistory = newArr;
+		}
+
+		/*
+			add hot data into search history
+		*/
+		if(this.checkCityIsSelect(searchHitory,data.CityId) == false){
+			let arr = [];
+			searchHitory.map(function(d){
+				arr.push(d);
+			});
+			arr.push(data);
+			this.props.dispatch(actions.startPlaceAction.updateSearchHistory(arr));
+			localStore.startPlaceSearchHistory = arr;
 		}
 		
 		localStore.customPackage.startPlace = {
@@ -175,6 +254,7 @@ let StartPlace = React.createClass({
 			searchHistory:'search-history none',
 			searchResult:'search-result-container none'
 		});
+		$("#search-input").val('');
 	},
 	clearSearchHistory(){
 		//清空搜索历史
@@ -198,7 +278,7 @@ let StartPlace = React.createClass({
 			<div>
 				<div className="head_top dosearch">
 					<div className="back none"></div>
-					<input type="text" 
+					<input type="search" 
 						className="input" 
 						placeholder="请输入出发地(如苏州/suzhou/sz)"
 						defaultValue=''
@@ -206,27 +286,18 @@ let StartPlace = React.createClass({
 						onInput={this.handleChange}
 						onCompositionStart={this.handleCompositionstart}
 						onFocus={this.handleFocus}
+						id='search-input'
 					/>
 					<div className="cancel" onClick={this.cancleSelect}>取消</div>
 				</div>
 				<div className="container">
 					<div className={this.state.initContainer}>
-						<div className="box">
-							{historyTitleTag}
-							<div className="box_cont"> 
-								{
-									that.sortArray(selectCityAssemble).map(function(item){
-										if(item.Id == that.state.cityId){
-											return  <a className="option_btn current-city" key={item.CityId} onClick={that.handleHotCity.bind(null,item)}>
-														{item.Name}
-													</a> 
-										}else{
-											return  <a className="option_btn" key={item.CityId} onClick={that.handleHotCity.bind(null,item)}>
-														{item.Name}
-													</a> 
-										}
-									})
-								}
+						<div className='box'>
+							<div className="box_tit">当前</div>
+							<div className='box_cont'>
+								<a className={
+									this.state.position.Id == this.state.cityId ? 'option_btn current-city' : 'option_btn'
+								} onClick={that.handlePositionCity}>{this.state.position.Name}</a> 
 							</div>
 						</div>
 						<div className="box">
@@ -252,7 +323,7 @@ let StartPlace = React.createClass({
 					<div className={this.state.searchHistory}>
 						{
 							this.props.searchHitory.map(function(item){
-								if(item.CityId == that.state.cityId){
+								if(item.Id == that.state.cityId){
 									return <div className='search-history-list active-word' key={item.Id} onClick={that.selectSearchList.bind(null,item)}>{item.Name}</div>
 								}else{
 
@@ -266,7 +337,7 @@ let StartPlace = React.createClass({
 					<div className={this.state.searchResult}>
 						{
 							this.props.searchData.map(function(item){
-								if(item.CityId == that.state.cityId){
+								if(item.Id == that.state.cityId){
 									return <div className='search-history-list active-word' key={item.Id} onClick={that.selectSearchList.bind(null,item)}>{item.Name}</div>
 								}else{
 

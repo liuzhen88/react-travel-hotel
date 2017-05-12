@@ -124,8 +124,9 @@ let TravelPlan = React.createClass({
 				'display':'none'
 			}
 		});
-	},
-	componentDidMount() {
+	},	
+	componentWillMount() {
+		app.checkLogin();
 		let that = this;
 		let query = this.props.location.query;
 		let SchemePlanId = query.SchemePlanId;
@@ -152,11 +153,45 @@ let TravelPlan = React.createClass({
 				}
 				that.setState({
 					planDetail:planDetail
+				},function(){
+					let h1 = $("#every-travel-detail").height();
+					let h2 = $("#report-price").height();
+					let h3 = $("#special").height();
+					let h4 = $("#free-send").height();
+					$('.travel-plan-detail-content').scroll(function(){
+						let h = $(this).scrollTop();
+						if(h>=h1 && h<= (h1+h2) ){
+							//显示第二个
+							if(that.state.index != 1){
+								that.setIndex('report-price',1);
+							}
+						}
+						if(h < h1){
+							//显示第一个
+							if(that.state.index != 0){
+								that.setIndex('every-travel-detail',0);
+							}
+						}
+						if(h> (h1+h2) && h<= (h1+h2+h3) ){
+							//显示第三个
+							if(that.state.index != 2){
+								that.setIndex('special',2);
+							}
+						}
+						if( h > (h1+h2+h3) ){
+							//第四个
+							if(that.state.index != 3){
+								that.setIndex('free-send',3);
+							}
+						}
+					})
 				})
 			}else{
 				app.showMsg(data.Msg);
 			}
 		});
+	},
+	componentDidMount() {
 	},
 	getTravelIcon(list){
 		let type = list.Type;
@@ -199,6 +234,14 @@ let TravelPlan = React.createClass({
 				break;
 		}
 		return icon;
+	},
+	setIndex(idName,index){
+		let anchorElement = document.getElementById(idName);
+		$('.travel-plan-detail-bar-list').removeClass('active-bar');
+		$('.travel-plan-detail-bar-list').eq(index).addClass('active-bar');
+		this.setState({
+			index:index
+		});
 	},
 	handleHash(idName, index){
 		let anchorElement = document.getElementById(idName);

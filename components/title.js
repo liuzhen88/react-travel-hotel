@@ -23,12 +23,14 @@ const Title = React.createClass({
 		return (
 			<div className='common-title-container'>
 				{ this.props.titleName ? this.props.titleName : '' }
-				<div className={this.state.backIcon} onClick={this.handleBack}>
-					<img src={back}/>
-				</div>
 			</div>
 		)
 	}
 });
+/*
+<div className={this.state.backIcon} onClick={this.handleBack}>
+	<img src={back}/>
+</div>
+*/
 
 export default Title;

@@ -16,10 +16,11 @@ let PaySuccess = React.createClass({
 		}	
 	},
 	componentWillMount : function(){
+		app.checkLogin();
 		var locatinurl=this.getUrlReq();
-		//var serialNo =locatinurl.out_trade_no.split('_')[0];
-		//this.setState({serialNo: serialNo,orderdetail:"#orderdetail?did=" +serialNo });
-		app.Post(app.GetServerPhone,{"a":"a"},);
+		var serialNo =locatinurl.out_trade_no.split('_')[0];
+		this.setState({serialNo: serialNo,orderdetail:"#orderdetail?did=" +serialNo });
+		app.Post(apiconfig.GetServerPhone,{"a":"a"},this.serverPhoneCallback);
 	},
 	serverPhoneCallback:function(data)
 	{
@@ -33,6 +34,7 @@ let PaySuccess = React.createClass({
 	},
 	getUrlReq: function () {
             var url = location.href, i = url.indexOf('?'), req = {};
+            //console.log(url);
             if (i > 0) {
                 url = url.substring(i + 1, url.length);
             }

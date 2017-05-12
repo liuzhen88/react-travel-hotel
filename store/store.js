@@ -18,7 +18,7 @@ let initStore = {
 			Name:''
 		},
 		endPlace:[],
-		customTime:['2017-05-07','2017-05-10'],
+		customTime:[],
 		time:{
 			count: '',
 			startMonth: '',

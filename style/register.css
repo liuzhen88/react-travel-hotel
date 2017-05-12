@@ -101,4 +101,65 @@
 .winbtn:last-child{
     margin-left: -1px;
 }
+
+.cost-box{width:100%;background-color:rgba(0,0,0,.9);position:fixed;top:0;left:0;height:auto;color:#fff;bottom:0;z-index:99999;}
+.cost-box div{padding:0 10px;}
+.cost-box h3{text-align:center;font-size:0.36rem;padding:20px 0;}
+
+.cost-footer-btn{
+    position: absolute;
+}
+
+.cost-box h1{text-align:center;font-size:18px;padding:10px 0;    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;    z-index: 99999;}
+.cost-box .cost-body{
+    font-size: 0.28rem;    
+    overflow-y: scroll;
+    position: absolute;
+    top: initial;
+    top: 0.96rem;
+    bottom: 1.26rem;
+    left: 0;
+    right: 0;
+    -webkit-overflow-scrolling: touch;
+}
+.cost-box .cost-body p{padding-top:5px;}
+.cost-box .cost-body h2.martop{padding-top:10px;}
+
+.cost-box h4{overflow:hidden;zoom:1;border-bottom:solid 1px #666;font-size:1.4rem;padding:8px 0;}
+.cost-box h4 span{float:right;color:#ff9900;}
+.cost-box li{font-size:1.4rem;padding:10px 0;overflow:hidden;}
+.cost-box li span{font-weight:normal;float:left;}
+.cost-box li .or-name{width:40%;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;}
+.cost-box li .or-type{width:18%;padding-left:1rem;}
+.cost-box li i{display:inline-block;width:33.3%;text-align:right;float:right;}
+.cost-price{text-align:right;font-size:1.7rem;display:block;padding-top:20px;padding-right:20px;}
+.cost-price font{color:#ff9900;}
+.cost-box a{width:3rem;height:3rem;}
+.cost-footer-btn{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0.4rem;
+    text-align: center;
+}
+.cost-footer-btn img{
+    width: 0.7rem;
+    height: 0.7rem;
+}
+.limit-register{
+    background-color: #ccc !important;
+}
+
+.winbtnone{
+    display: inline-block;
+    width: 100%;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    color: #0596e7;
+}
 /*弹窗end*/

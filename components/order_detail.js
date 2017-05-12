@@ -60,7 +60,8 @@ let OrderDetail = React.createClass({
 			SupplierCount:''
 		}	
 	},
-	componentDidMount() {
+	componentWillMount : function(){
+		app.checkLogin();
 		let that = this;
 		let query = this.props.location.query;
 		let did = query.did;
@@ -123,6 +124,8 @@ let OrderDetail = React.createClass({
 				})
 			}
 		});
+	},
+	componentDidMount() {
 	},
 	getIcon(value){
 		let iconValue = '';
@@ -231,11 +234,9 @@ let OrderDetail = React.createClass({
 						isModalShow:{
 							'display':'block',
 						},
-						isCancleReasonShow:{
-							'display':'block'
-						},
 						CancelResons:data.CancelResons
 					});
+					$("#canlce-order-container").slideToggle(200);
 				}else{
 					app.showMsg(data.Msg);
 				}
@@ -244,22 +245,18 @@ let OrderDetail = React.createClass({
 			that.setState({
 				isModalShow:{
 					'display':'block',
-				},
-				isCancleReasonShow:{
-					'display':'block'
 				}
 			});
+			$("#canlce-order-container").slideToggle(200);
 		}
 	},
 	handleModal(){
 		this.setState({
 			isModalShow:{
 				'display':'none',
-			},
-			isCancleReasonShow:{
-				'display':'none'
 			}
 		});
+		$("#canlce-order-container").slideToggle(200);
 	},
 	handleButtonClick(list){
 		let that = this;
@@ -389,7 +386,7 @@ let OrderDetail = React.createClass({
 		let that = this;
 		let orderPrice = '';
 		if(this.state.orderDetail.Cost.Amount){
-			orderPrice = <div className='order-total-price'>订单总额 <span className='order-price'>￥{this.state.orderDetail.Cost.Amount} </span></div>
+			orderPrice = <div className='order-total-price'>{this.state.orderDetail.Cost.Des} <span className='order-price'>￥{this.state.orderDetail.Cost.Amount} </span></div>
 		}else{
 			orderPrice = <div className='order-total-price'>{this.state.orderDetail.Cost.Des}</div>
 		}
@@ -418,8 +415,15 @@ let OrderDetail = React.createClass({
 						<div className='order-action'>
 							{
 								this.state.orderDetail.ButtonList.map(function(item){
-									 
-									return <div className='order-action-button' key={item.Type} onClick={that.handleButtonClick.bind(null,item)}>{item.Name}</div>
+									if(item.Type == 0){
+										return <div className='order-action-button limit-contract' key={item.Type} onClick={that.handleButtonClick.bind(null,item)}>{item.Name}</div>
+									}else if(item.Type == 5){
+										return <div className='order-action-button can-see-contract' key={item.Type} onClick={that.handleButtonClick.bind(null,item)}>{item.Name}</div>
+									}else if(item.Type == 100 || item.Type == 304){
+										return <div className='order-action-button blue-pay' key={item.Type} onClick={that.handleButtonClick.bind(null,item)}>{item.Name}</div>
+									}else{
+										return <div className='order-action-button' key={item.Type} onClick={that.handleButtonClick.bind(null,item)}>{item.Name}</div>
+									} 
 								})
 							}
 							<div className='clear'></div>
@@ -434,9 +438,13 @@ let OrderDetail = React.createClass({
 							let AmountFloat = item.SchemeCost.AmountFloat;
 							let pre = '';
 							if(AmountFloat == 1){
-								pre = <span className='order-travel-precent shangshen'>↑ {item.SchemeCost.Proportion}</span>;
+								pre = <span className={
+									item.SchemeCost.Proportion != '0%' ? 'order-travel-precent shangshen':'none'
+								}>↑ {item.SchemeCost.Proportion}</span>;
 							}else{
-								pre = <span className='order-travel-precent'>↓ {item.SchemeCost.Proportion}</span>;
+								pre = <span className={
+									item.SchemeCost.Proportion != '0%' ? 'order-travel-precent':'none'
+								}>↓ {item.SchemeCost.Proportion}</span>;
 							}
 							if(item.ServiceGradeDesc != ''){
 								service = <div className='order-sign-list'>{item.ServiceGradeDesc}</div>;
@@ -577,7 +585,7 @@ let OrderDetail = React.createClass({
 					</div>
 				</div>
 				<div className='modal' style={this.state.isModalShow} onClick={this.handleModal}></div>
-				<div className='cancle-container' style={this.state.isCancleReasonShow}>
+				<div className='cancle-container' style={this.state.isCancleReasonShow} id='canlce-order-container'>
 					<div className='cancle-title'>取消订单</div>
 					<div className='cancle-content'>
 						<div className='cancle-content-title'>已邀请优质地接社专门设计，取消就没有了哦，是否继续？</div>

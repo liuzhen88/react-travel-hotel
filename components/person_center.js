@@ -19,6 +19,9 @@ let PersonCenter = React.createClass({
 			userName:""
 		}	
 	},
+	componentWillMount : function(){
+		app.checkLogin();
+	},
 	componentDidMount() {
 		let that = this;
 		app.Post(config.GetCustomerIndexInfo,{

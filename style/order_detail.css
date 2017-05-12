@@ -82,7 +82,7 @@
 	color: #999;
 	font-size: 0.28rem;
 	border: solid #e2e2e2 1px;
-	border-radius: 0.04rem;
+	border-radius: 0.08rem;
 	margin-right: 0.2rem;
 }
 .order-action-button:nth-child(1){
@@ -1229,6 +1229,9 @@
 .box_list{
 	/*margin-top: 1.78rem;*/
 }
+.box_listerror{
+	margin-top: 1.78rem;
+}
 .rc-load-more:after
 {
 	background: none !important;
@@ -1424,4 +1427,16 @@
 }
 .active-word{
 	color: #FB9C15;
+}
+.limit-contract{
+	color: #fff;
+	background-color: #979797;
+}
+.can-see-contract{
+	color: #fff;
+	background-color: #FF9A33;
+}
+.blue-pay{
+	color: #fff;
+	background-color: #0094E2;
 }

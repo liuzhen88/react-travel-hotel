@@ -85,12 +85,12 @@ let app = {
 	Post: function (method,data,callback){
 		var settings = app.getSettings();
 		let requestUrl = config.serverUrl + method;
-		console.log(JSON.stringify(app.GetSerializeJson(data)));
+		//console.log(JSON.stringify(app.GetSerializeJson(data)));
 		$.ajax({
 			url: requestUrl,
 			data: app.GetSerializeJson(data),
 			dataType: 'json', //忙艙聧氓艩隆氓鈩⒙库€澝モ€号緅son忙聽录氓录聫忙鈥⒙懊β嵚
-			type: 'post', //HTTP猫炉路忙卤鈥毭甭幻ヅ锯€
+			type: 'Post', //HTTP猫炉路忙卤鈥毭甭幻ヅ锯€
 			timeout: 20000, //猫露鈥γ︹€斅睹︹€斅睹┾€斅疵久铰ぢ该р€櫭尖€
 			success: function(data) {
 				if(data.Code == "8001" || data.Code == "8000") {
@@ -135,9 +135,9 @@ let app = {
 	checkLogin:function()
 	{
 		var settings = app.getSettings();
-		if(!!settings.Token && !!settings.MemberId)
+		if(!(!!settings.Token && !!settings.MemberId))
 		{
-			app.ToMain();
+			window.location.hash = '#login';
 		}
 	},
 	DateAdd: function(strInterval, Number, dateStr) {

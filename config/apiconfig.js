@@ -28,7 +28,8 @@ let apiconfig=
 	GetContractInfo:'Scheme/GetContractInfo',
 	ConfirmContract:'Scheme/ConfirmContract',
 	GetDestinationList:'Search/GetDestinationList',
-	GetCustomerIndexInfo:'Customer/GetCustomerIndexInfo'
+	GetCustomerIndexInfo:'Customer/GetCustomerIndexInfo',
+	GetSericeTerms:"Common/GetSericeTerms"
 }
 
 export default apiconfig;

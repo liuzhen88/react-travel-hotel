@@ -168,7 +168,7 @@ let ForgetPage = React.createClass({
 						以验证账户
 					</div>
 					<div className="group_item">
-						<input type="text" placeholder="请输入11位手机号码" onChange={this.mobileChange} className="input" ref="mobile" maxLength="11"/>
+						<input type="tel" placeholder="请输入11位手机号码" onChange={this.mobileChange} className="input" ref="mobile" maxLength="11"/>
 					</div>
 					<div className="group_item">
 						<a className="orange_btn" onClick={this.handleClick01}>下一步，验证手机号</a>
@@ -182,7 +182,7 @@ let ForgetPage = React.createClass({
 						{this.state.mobileNumber}
 					</div>
 					<div className="group_item">
-						<input type="text" className="input" placeholder="请输入手机号码" value={this.state.code} onChange={this.codeChange}maxLength="11"/>
+						<input type="tel" className="input" placeholder="请输入手机号码" value={this.state.code} onChange={this.codeChange}maxLength="11"/>
 						<a className={this.state.codeCss} onClick={this.sendCode}>{this.state.codeIntro}</a>
 					</div>
 					<div className="group_item">

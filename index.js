@@ -3,8 +3,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, hashHistory } from 'react-router';
 import IndexPage from './components/index';
-import FirstPage from './components/first_page';
-import SecondPage from './components/second_page';
 import LocationPage from './components/location';
 import OrderDetail from './components/order_detail';
 import PersonPage from './components/person';
@@ -30,8 +28,6 @@ render (
 	<Provider store={store} >
 		<Router history={ hashHistory }>
 			<Route path='/' component={ IndexPage }></Route>
-			<Route path='/first' component={ FirstPage }></Route>
-			<Route path='/second' component={ SecondPage }></Route>
 			<Route path='/startPlace' component={ StartPlace }></Route>
 			<Route path='/location' component={ LocationPage }></Route>
 			<Route path='/orderDetail' component={ OrderDetail }></Route>

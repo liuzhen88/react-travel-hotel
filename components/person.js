@@ -16,7 +16,6 @@ let Head = React.createClass({
 	render(){
 		return (
 			<div className={ this.props.className ? this.props.className : "header"}>
-				<div onClick={this.handleBack} className="back"></div>
 				<h3 className="header_title">{ this.props.titleName ? this.props.titleName : '' }</h3>
 			</div>
 		)
@@ -32,7 +31,7 @@ let PersonPage = React.createClass({
 	},
 	componentWillMount : function(){
 		var memberId=app.getSettings().memberId;
-		if(!!memberId)
+		if(!!memberId && memberId!="")
 		{
 			window.location.hash = '#login';
 		}else {

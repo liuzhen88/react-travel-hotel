@@ -191,6 +191,16 @@ let LocationPage = React.createClass({
 			}
 		});
 		let selectHistory = this.state.selectHistory;
+		/*
+			add hot search data into search history
+		*/
+		selectHistory.map(function(item){
+			if(that.checkIsSelect(searchHistory,item.Id) == false){
+				searchHistory.push(item);
+			}
+		});
+
+		/* add end */
 		let custom = app.getCloneObject(this.props.custom);
 		custom.endPlace = selectHistory;
 		this.props.dispatch(actions.indexAction.updateEndPlace(custom));
@@ -246,7 +256,8 @@ let LocationPage = React.createClass({
 			searchResultContainer:'box_list none',
 			notFound:'box_list none',
 			defaultValue:''
-		})
+		});
+		$("#search-input").val('');
 	},
 	render(){
 		let that = this;
@@ -266,6 +277,7 @@ let LocationPage = React.createClass({
                         onCompositionStart={this.handleCompositionstart}
                         onCompositionEnd={this.handleCompositionEnd}
                         onInput={this.handleChange}
+                        id='search-input'
                     />
                     <div className="cancel" onClick={this.handleCancle}>取消</div>
                 </div>

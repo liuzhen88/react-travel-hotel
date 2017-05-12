@@ -6,6 +6,9 @@ import app from '../config/public';
 import config from '../config/apiconfig';
 
 const history = createHashHistory();
+
+let isCanSubmit = 0;
+
 let TravelNeedDetail = React.createClass({
 	getInitialState() {
 		return {
@@ -16,6 +19,9 @@ let TravelNeedDetail = React.createClass({
 			totalInput:500,
 			textAreaValue:''
 		}
+	},
+	componentWillMount : function(){
+		//app.checkLogin();
 	},
 	componentDidMount() {
 		let that = this;
@@ -42,6 +48,15 @@ let TravelNeedDetail = React.createClass({
 			this.setState({
 				Products:Products
 			})
+		}else{
+			Products.forEach(function(item,index){
+				if(item.Id == list.Id){
+					Products[index].IsSelect = 0;
+				}
+			});
+			this.setState({
+				Products:Products
+			})
 		}
 	},
 	handleInput(e){
@@ -61,6 +76,7 @@ let TravelNeedDetail = React.createClass({
 		}
 	},
 	submitNeed(){
+		isCanSubmit++;
 		//服务
 		let product = [];
 		this.state.Products.map(function(item){
@@ -81,10 +97,12 @@ let TravelNeedDetail = React.createClass({
 		let userAmount = document.getElementById('every-people-money').value;
 
 		if(userName == ""){
+			isCanSubmit = 0;
 			app.showMsg('请填写联系人姓名');
 			return;
 		}
 		if(userPhone == ''){
+			isCanSubmit = 0;
 			app.showMsg('请填写联系电话');
 			return;
 		}
@@ -125,14 +143,23 @@ let TravelNeedDetail = React.createClass({
 			ContactPhone:userPhone,
 			Budget:userAmount
 		};
-		app.Post(config.SchemeOrderSubmitForExternal,sendData,function(data){
-			if(data.Code == '0000'){
-				let nextUrl = "/orderDetail?did="+data.Did;
-				history.replace(nextUrl);
-			}else{
-				app.showMsg(data.Msg);
-			}
-		})
+		if(isCanSubmit == 1){
+			app.Post(config.SchemeOrderSubmitForExternal,sendData,function(data){
+				if(data.Code == '0000'){
+					var settings=app.getSettings();
+					if(!settings.Token){
+						settings.Token = data.Token;
+						settings.MemberId = data.MemberId;
+						app.setSettings(settings);
+					}
+					let nextUrl = "/orderDetail?did="+data.Did;
+					history.replace(nextUrl);
+				}else{
+					isCanSubmit = 0;
+					app.showMsg(data.Msg);
+				}
+			});
+		}
 	},
 	render(){
 		let that = this;
